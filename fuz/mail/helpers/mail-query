@@ -1,0 +1,26 @@
+#!/bin/env python
+
+import notmuch
+import datetime
+import sys
+
+if len(sys.argv) > 1:
+    query = sys.argv[1]
+else:
+    query = "tag:unread"
+
+db = notmuch.Database()
+query = db.create_query(query)
+
+messages = query.search_messages()
+
+for m in messages:
+    date = datetime.datetime.fromtimestamp(m.get_date()).strftime(
+        "%Y-%m-%d %H:%M"
+    )
+    author = m.get_header("from").partition("<")[0]
+    print(
+        "{}\t{:<25}\t{:<80}\t{}".format(
+            date, author, m.get_header("subject"), m.get_message_id()
+        )
+    )

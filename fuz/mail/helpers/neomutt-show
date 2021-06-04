@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+msg_id=$1
+
+neomutt -e "push /~i$msg_id<enter>"

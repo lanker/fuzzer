@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+
+script=$(cat <<EOS
+s//\n/g;
+/^[[:space:]]*(part|header|message)}$/d;
+s/^[[:space:]]*(body)}$//;
+s/^[[:space:]]*(body)\{$//;
+/^[[:space:]]*(part|header|message)\{.*$/d
+EOS
+)
+
+exec sed -E "$script"

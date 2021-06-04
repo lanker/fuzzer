@@ -1,0 +1,6 @@
+FZF_DEFAULT_OPTS+=' --bind="ctrl-a:execute(notmuch tag +archive -unread -inbox id:$(echo {} | cut -f 4))+reload(mail-query $query),ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down"'
+FZF_DEFAULT_OPTS+=' --preview-window="down,75%,border-top,wrap"'
+FZF_DEFAULT_OPTS+=' --preview="notmuch show id:$(echo {} | cut -f 4) | show-pretty"'
+
+SCRIPT_PATH=$(dirname "$0")
+PATH+=":$SCRIPT_PATH/helpers/"
