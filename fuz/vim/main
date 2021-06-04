@@ -1,0 +1,8 @@
+#!/bin/env bash
+
+file=$(grep '^>' ~/.viminfo | cut -c3- | sed 's,~,'"$HOME"',' | $FUZZER)
+
+if [ -n "$file" ]; then
+    dir=$(dirname "$file")
+    urxvtc -cd "$dir" -e vim "$file"
+fi
