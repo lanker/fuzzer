@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+export FUZZER=fzf
+
+SCRIPT_PATH=$(dirname "$0")
+SCRIPT_PATH=$(cd "$SCRIPT_PATH" && pwd)
+
+FUZ_DIR="$SCRIPT_PATH/fuz"
+
+query_head=$1
+if [[ -n "$query_head" ]]; then
+    query_head="--select-1 --query=$query_head"
+fi
+query_sub=$2
+if [[ -n "$query_sub" ]]; then
+    query_sub="--select-1 --query=$query_sub"
+fi
+
+heads=$(ls "$FUZ_DIR")
+# shellcheck disable=SC2086 # query_head
+sub=$(printf "%s\n" "${heads[@]}" | $FUZZER $query_head)
+
+mapfile -t cmds < <(find "$FUZ_DIR/$sub" -maxdepth 1 -type f -exec basename {} \; | sort)
+
+# if only one file, execute it directly
+if [[ ${#cmds[@]} -eq 1 ]]; then
+    bash "$FUZ_DIR/$sub/${cmds[0]}"
+    exit
+fi
+
+# shellcheck disable=SC2086 # query_sub
+cmd=$(printf "%s\n" "${cmds[@]}" | $FUZZER $query_sub)
+bash "$FUZ_DIR/$sub/$cmd"
