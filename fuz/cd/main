@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+dir=$(zoxide query -l | $FUZZER)
+
+if [[ -n "$dir" ]]; then
+    urxvtc -cd "$dir"
+fi
