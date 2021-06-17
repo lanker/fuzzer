@@ -11,11 +11,11 @@ FUZ_DIR="$SCRIPT_PATH/fuz"
 
 query_head=$1
 if [[ -n "$query_head" ]]; then
-    query_head="--select-1 --query=$query_head"
+    query_head="--select-1 --query=^$query_head"
 fi
 query_sub=$2
 if [[ -n "$query_sub" ]]; then
-    query_sub="--select-1 --query=$query_sub"
+    query_sub="--select-1 --query=^$query_sub"
 fi
 
 heads=$(ls "$FUZ_DIR")
