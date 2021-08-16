@@ -1,0 +1,5 @@
+dir_picker() {
+    dir=$(zoxide query -l | $FUZZER)
+    echo "$dir"
+}
+export -f dir_picker

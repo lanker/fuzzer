@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-dir=$(zoxide query -l | $FUZZER)
+dir=$(dir_picker)
 
 if [[ -n "$dir" ]]; then
     urxvtc -cd "$dir"

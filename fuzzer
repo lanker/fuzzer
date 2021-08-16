@@ -4,9 +4,14 @@ set -eo pipefail
 
 export FUZZER=fzf
 
+# get dir of this script
 SCRIPT_PATH=$(dirname "$0")
 SCRIPT_PATH=$(cd "$SCRIPT_PATH" && pwd)
 
+# source helpers
+source "$SCRIPT_PATH/helpers/functions"
+
+# dir of "plugins"
 FUZ_DIR="$SCRIPT_PATH/fuz"
 
 query_head=$1
