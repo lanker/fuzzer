@@ -1,0 +1,12 @@
+dir=$(repo_picker)
+
+if [ -z "$dir" ]; then
+    exit
+fi
+
+pushd "$dir" > /dev/null
+
+issue=$(gh issue list -L 1000 | $FUZZER --preview-window=wrap --preview='gh issue view {1}' | cut -f 1)
+# echo "$issue"
+
+popd > /dev/null

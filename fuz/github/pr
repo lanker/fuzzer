@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+dir=$(repo_picker)
+
+if [ -z "$dir" ]; then
+    exit
+fi
+
+SCRIPT_PATH=$(dirname "$0")
+# . "$SCRIPT_PATH/helpers/env"
+
+pushd "$dir" > /dev/null
+
+pr=$(gh pr list -L 1000 | $FUZZER --preview-window=wrap --preview='gh pr view {1}' | cut -f 1)
+# echo "$pr"
+
+subcommands=(checkout comment edit checks review web view merge)
+
+cmd=$(printf '%s\n' "${subcommands[@]}" | $FUZZER)
+
+# add key handler to fzf, ctrl+w should add --web to any command
+if [[ "$cmd" == "web" ]]; then
+    gh pr view --web "$pr"
+else
+    gh pr "$cmd" "$pr"
+fi
+
+popd > /dev/null

@@ -3,3 +3,23 @@ dir_picker() {
     echo "$dir"
 }
 export -f dir_picker
+
+check_if_git_repo() {
+    git -C "$1" rev-parse 2>/dev/null
+}
+export -f check_if_git_repo
+
+repo_picker() {
+    # if current dir is not a git repository, show the directory picker and let
+    # the user select a repository. Exit if the user selects a non-repository
+    # directory.
+    dir=$(pwd)
+    if ! check_if_git_repo "$dir"; then
+        dir=$(dir_picker)
+        if ! check_if_git_repo "$dir"; then
+            exit
+        fi
+    fi
+    echo "$dir"
+}
+export -f repo_picker
