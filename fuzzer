@@ -27,7 +27,7 @@ heads=$(ls "$FUZ_DIR")
 # shellcheck disable=SC2086 # query_head
 sub=$(printf "%s\n" "${heads[@]}" | $FUZZER $query_head)
 
-mapfile -t cmds < <(find "$FUZ_DIR/$sub" -maxdepth 1 -type f -exec basename {} \; | sort)
+mapfile -t cmds < <(find "$FUZ_DIR/$sub" -maxdepth 1 -type l,f -exec basename {} \; | sort)
 
 # if only one file, execute it directly
 if [[ ${#cmds[@]} -eq 1 ]]; then
