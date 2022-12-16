@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+set -e
+
+BW_SESSION_FILE=$HOME/.bw-session
+if [ ! -f "$BW_SESSION_FILE" ]; then
+    touch "$BW_SESSION_FILE"
+    chmod 600 "$BW_SESSION_FILE"
+fi
+
+function retrieve() {
+    KEY_ID=$(cat "$BW_SESSION_FILE")
+    keyctl print "$KEY_ID" | xxd -r -p
+}
+
+function store() {
+    KEY_ID=$(echo "$1" | keyctl padd user bw-session @u)
+    keyctl timeout "$KEY_ID" 900
+    echo "$KEY_ID" > "$BW_SESSION_FILE"
+}
+
+key=$(retrieve)
+if [ -z "$key" ] ; then
+    key=$(bw unlock --raw)
+    store "$key"
+fi
+BW_SESSION=$key
+export BW_SESSION;
+
+COPY="xsel -t 45000"
+logins="$(bw list items)"
+name="$(echo "$logins" | jq -r '.[].name' | fzf)"
+selected="$(echo "$logins" | jq -r ".[] | select(.name == \"$name\")")"
+printf '%s' "$(echo "$selected" | jq -r '.login.password')" | $COPY
