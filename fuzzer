@@ -23,7 +23,13 @@ if [[ -n "$query_sub" ]]; then
     query_sub="--select-1 --query=^$query_sub"
 fi
 
-heads=$(ls "$FUZ_DIR")
+declare -a heads
+heads=()
+for dir in "$FUZ_DIR"/*; do
+    if [ ! -f "$dir/disable" ]; then
+        heads+=("$(basename "$dir")")
+    fi
+done
 # shellcheck disable=SC2086 # query_head
 sub=$(printf "%s\n" "${heads[@]}" | $FUZZER $query_head)
 
