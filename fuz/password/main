@@ -27,8 +27,44 @@ fi
 BW_SESSION=$key
 export BW_SESSION;
 
+folders_str="$(bw list folders)"
+declare -A folders_id2name="($(
+  echo "$folders_str" | jq -r '
+    .[] as $folder
+    | @sh "[\($folder.id)]=\(map(select(.id == $folder.id).name) | join(" "))"
+  '
+))"
+
+declare -A folders_name2id="($(
+  echo "$folders_str" | jq -r '
+    .[] as $folder
+    | @sh "[\($folder.name)]=\(map(select(.id == $folder.id).id) | join(" "))"
+  '
+))"
+
 COPY="xsel -t 45000"
 logins="$(bw list items)"
-name="$(echo "$logins" | jq -r '.[].name' | fzf)"
-selected="$(echo "$logins" | jq -r ".[] | select(.name == \"$name\")")"
+entries=$(echo "$logins" | jq -r '.[] | [.name, .folderId] | @tsv')
+str=1
+readarray -t <<< "$entries"
+for entry in "${MAPFILE[@]}"; do
+    name=$(echo "$entry" | cut -f1)
+    folder_id=$(echo "$entry" | cut -f2)
+    if [ -z "$folder_id" ]; then
+        printf -v tmp "%s" "$name"
+    else
+        printf -v tmp "%s/%s" "${folders_id2name[$folder_id]}" "$name"
+    fi
+    if [[ "$str" == 1 ]]; then
+        str="$tmp"
+    else
+        str+="\n$tmp"
+    fi
+done
+
+entry="$(echo -e "$str" | sort | $FUZZER)"
+entry_folder=$(echo "$entry" | cut -d'/' -f1)
+entry_name=$(echo "$entry" | cut -d'/' -f2)
+folder_id="${folders_name2id[$entry_folder]}"
+selected="$(echo "$logins" | jq -r ".[] | select(.name == \"$entry_name\" and .folderId == \"$folder_id\")")"
 printf '%s' "$(echo "$selected" | jq -r '.login.password')" | $COPY
