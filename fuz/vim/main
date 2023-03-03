@@ -1,8 +1,14 @@
 #!/bin/env bash
 
-file=$(grep '^>' ~/.viminfo | cut -c3- | sed 's,~,'"$HOME"',' | $FUZZER)
+tmpfile=$(mktemp)
+
+nvim --headless -u NONE -i ~/.local/share/nvim/shada/main.shada -c "redir! > $tmpfile | silent oldfiles | qall!"
+grep '^>' ~/.viminfo | cut -c3- | sed 's,~,'"$HOME"',' >> "$tmpfile"
+
+file=$(cut -d' ' -f2 "$tmpfile" | tail -n +2 | awk '!x[$0]++' | $FUZZER)
+rm "$tmpfile"
 
 if [ -n "$file" ]; then
     dir=$(dirname "$file")
-    urxvtc -cd "$dir" -e vim "$file"
+    urxvtc -cd "$dir" -e nvim "$file"
 fi
