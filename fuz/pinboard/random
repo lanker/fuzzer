@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+PINBOARD_FILE="${PINBOARD_FILE:-$1}"
+PINBOARD_USER="${PINBOARD_USER:-$2}"
+
+url=$(jq -rc '.[]|select(.toread == "yes")' "$PINBOARD_FILE" | shuf | head -n 1 | jq -r '.href|@uri')
+
+xdg-open "https://pinboard.in/search/u:$PINBOARD_USER?query=$url"
