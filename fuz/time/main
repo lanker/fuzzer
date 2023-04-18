@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# https://lazybear.io/posts/cli-of-the-week-19/
+(set -a; TZ=$( fd . /usr/share/zoneinfo | cut -d'/' -f5- | fzf) ; echo "Timezone: $TZ" ; date )
+read -r
