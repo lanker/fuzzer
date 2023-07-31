@@ -66,5 +66,9 @@ entry="$(echo -e "$str" | sort | $FUZZER)"
 entry_folder=$(echo "$entry" | cut -d'/' -f1)
 entry_name=$(echo "$entry" | cut -d'/' -f2)
 folder_id="${folders_name2id[$entry_folder]}"
-selected="$(echo "$logins" | jq -r ".[] | select(.name == \"$entry_name\" and .folderId == \"$folder_id\")")"
+if [ -n "$folderId" ]; then
+    selected="$(echo "$logins" | jq -r ".[] | select(.name == \"$entry_name\" and .folderId == \"$folder_id\")")"
+else
+    selected="$(echo "$logins" | jq -r ".[] | select(.name == \"$entry_name\" )")"
+fi
 printf '%s' "$(echo "$selected" | jq -r '.login.password')" | $COPY
