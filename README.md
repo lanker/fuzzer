@@ -15,3 +15,4 @@ Some ideas and code from http://git.jb55.com/citadel/
 | pinboard | Search or open random unread post in exported json file from Pinboard |                                                                                        |
 | github   | Perfom actions on PRs and issues                                      | [github-cli](https://cli.github.com/)                                                  |
 | pacman   | Install and remove Arch Linux packages                                | [pacman](https://wiki.archlinux.org/title/Pacman), [yay](https://github.com/Jguer/yay) |
+| links    | Search or open random unread post in exported json file from Linkding |                                                                                        |
