@@ -2,12 +2,23 @@
 
 entry=$(rbw list --fields folder,name | tr '\t' '/' | sed 's|^/||' | sort | $FUZZER)
 
-part1=$(awk -F/ '{print $1}' <<< "$entry")
-part2=$(awk -F/ '{print $2}' <<< "$entry")
+part1=$(awk -F/ '{print $1}' <<<"$entry")
+part2=$(awk -F/ '{print $2}' <<<"$entry")
 
 COPY="xsel -t 45000"
 if [[ -n "$part2" ]]; then
-    echo -n "$(rbw get --folder "$part1" "$part2")" | $COPY
+    data=$(rbw get --full --folder "$part1" "$part2")
 else
-    echo -n "$(rbw get "$part1")" | $COPY
+    data=$(rbw get --full "$part1")
 fi
+
+NL='
+'
+case $data in
+    *"$NL"*)
+        echo "$data" | tail -n +2
+        read -r
+        echo -n "$(echo "$data" | head -1)" | $COPY
+        ;;
+    *) echo -n "$data" | $COPY ;;
+esac
