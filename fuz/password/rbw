@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+entry=$(rbw list --fields folder,name | tr '\t' '/' | sed 's|^/||' | sort | $FUZZER)
+
+part1=$(awk -F/ '{print $1}' <<< "$entry")
+part2=$(awk -F/ '{print $2}' <<< "$entry")
+
+COPY="xsel -t 45000"
+if [[ -n "$part2" ]]; then
+    echo -n "$(rbw get --folder "$part1" "$part2")" | $COPY
+else
+    echo -n "$(rbw get "$part1")" | $COPY
+fi
