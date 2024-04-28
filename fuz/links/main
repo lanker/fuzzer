@@ -9,11 +9,6 @@
 
 set -e
 
-SCRIPT_PATH=$(dirname "$0")
-if [ -f "$SCRIPT_PATH/helpers/env" ]; then
-    . "$SCRIPT_PATH/helpers/env"
-fi
-
 LINKS_FILE="${LINKS_FILE:-$1}"
 
 xdg-open "$(jq -r '.[]|[.title,.description,.tag_names,.url]|flatten|@tsv' "$LINKS_FILE" | fzf -e | cut -f 4)"

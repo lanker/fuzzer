@@ -7,7 +7,6 @@ if [ -z "$dir" ]; then
 fi
 
 SCRIPT_PATH=$(dirname "$0")
-# . "$SCRIPT_PATH/helpers/env"
 
 pushd "$dir" > /dev/null
 

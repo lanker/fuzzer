@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-SCRIPT_PATH=$(dirname "$0")
-if [ -f "$SCRIPT_PATH/helpers/env" ]; then
-    . "$SCRIPT_PATH/helpers/env"
-fi
-
 LINKS_FILE="${LINKS_FILE:-$1}"
 
 id=$(jq -rc '.[]|select(.unread == true)' "$LINKS_FILE" | shuf | head -n 1 | jq -r '.id')

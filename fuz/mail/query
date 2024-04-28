@@ -8,9 +8,6 @@ fi
 
 export query
 
-SCRIPT_PATH=$(dirname "$0")
-. "$SCRIPT_PATH/helpers/env"
-
 msg_id=$(mail-query "$query" | $FUZZER | cut -f 4)
 [[ -z "$msg_id" ]] && exit
 neomutt-show "$msg_id"

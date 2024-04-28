@@ -2,11 +2,6 @@
 
 set -e
 
-SCRIPT_PATH=$(dirname "$0")
-if [ -f "$SCRIPT_PATH/helpers/env" ]; then
-    . "$SCRIPT_PATH/helpers/env"
-fi
-
 PINBOARD_FILE="${PINBOARD_FILE:-$1}"
 
 xdg-open "$(jq -r '.[]|[.description,.extended,.tags,.href]|@csv' "$PINBOARD_FILE" | fzf -e | xsv select 4)"

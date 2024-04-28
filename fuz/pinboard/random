@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-SCRIPT_PATH=$(dirname "$0")
-if [ -f "$SCRIPT_PATH/helpers/env" ]; then
-    . "$SCRIPT_PATH/helpers/env"
-fi
-
 PINBOARD_FILE="${PINBOARD_FILE:-$1}"
 PINBOARD_USER="${PINBOARD_USER:-$2}"
 

@@ -43,4 +43,12 @@ fi
 
 # shellcheck disable=SC2086 # query_sub
 cmd=$(printf "%s\n" "${cmds[@]}" | $FUZZER $query_sub)
+
+# if helpera/env exists, source it automatically
+if [ -f "$FUZ_DIR/$sub/helpers/env" ]; then
+    set -a
+    source "$FUZ_DIR/$sub/helpers/env"
+    set +a
+fi
+
 bash "$FUZ_DIR/$sub/$cmd"
