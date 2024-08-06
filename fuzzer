@@ -35,6 +35,13 @@ sub=$(printf "%s\n" "${heads[@]}" | $FUZZER $query_head)
 
 mapfile -t cmds < <(find "$FUZ_DIR/$sub" -maxdepth 1 -type l,f -exec basename {} \; | sort)
 
+# if helpera/env exists, source it automatically
+if [ -f "$FUZ_DIR/$sub/helpers/env" ]; then
+    set -a
+    source "$FUZ_DIR/$sub/helpers/env"
+    set +a
+fi
+
 # if only one file, execute it directly
 if [[ ${#cmds[@]} -eq 1 ]]; then
     bash "$FUZ_DIR/$sub/${cmds[0]}"
@@ -43,12 +50,5 @@ fi
 
 # shellcheck disable=SC2086 # query_sub
 cmd=$(printf "%s\n" "${cmds[@]}" | $FUZZER $query_sub)
-
-# if helpera/env exists, source it automatically
-if [ -f "$FUZ_DIR/$sub/helpers/env" ]; then
-    set -a
-    source "$FUZ_DIR/$sub/helpers/env"
-    set +a
-fi
 
 bash "$FUZ_DIR/$sub/$cmd"
