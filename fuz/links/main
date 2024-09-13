@@ -11,4 +11,4 @@ set -e
 
 LINKS_FILE="${LINKS_FILE:-$1}"
 
-xdg-open "$(jq -r '.[]|[.title,.description,.tag_names,.url]|flatten|@tsv' "$LINKS_FILE" | fzf -e | cut -f 4)"
+xdg-open "$(jq -r '.[]|[.title,.website_title,.description,.tag_names,.url]|flatten|@tsv' "$LINKS_FILE" | fzf -e | cut -f 4)"
