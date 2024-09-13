@@ -4,4 +4,4 @@ set -e
 
 PINBOARD_FILE="${PINBOARD_FILE:-$1}"
 
-xdg-open "$(jq -r '.[]|[.description,.extended,.tags,.href]|@csv' "$PINBOARD_FILE" | fzf -e | xsv select 4)"
+xdg-open "$(jq -r '.[]|[.description,.extended,.tags,.href]|@tsv' "$PINBOARD_FILE" | fzf -e | cut -f 4)"
